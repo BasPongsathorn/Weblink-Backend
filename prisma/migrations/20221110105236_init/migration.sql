@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Anouncement" ALTER COLUMN "OwnerID" DROP NOT NULL,
+ALTER COLUMN "UpdateBy" DROP NOT NULL;

@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WeblinkCategories {
+  WeblinkCategoryID String   @id @default(uuid()) @db.Uuid()
+  CategoryName      String
+  Public            Boolean  @default(false)
+  CreatedBy         String?   @db.Uuid()
+  CreateAt          DateTime @default(now())
+  UpdateAt          DateTime @updatedAt
+
+  Weblinks Weblink[] @relation(name: "category")
+}
+
+model Weblink {
+  WeblinkID         String   @id @default(uuid()) @db.Uuid()
+  Title             String
+  Image             String
+  URL               String
+  WeblinkCategoryID String   @db.Uuid()
+  Public            Boolean  @default(false)
+  CreatedBy         String?   @db.Uuid()
+  UpdatedBy         String?  @db.Uuid()
+  CreateAt          DateTime @default(now())
+  UpdateAt          DateTime @updatedAt
+
+  Category WeblinkCategories @relation(name: "category", fields: [WeblinkCategoryID], references: [WeblinkCategoryID])
+}
+
+model Announcement {
+  AnnouncementID String   @id @default(uuid()) @db.Uuid()
+  Title          String
+  Image          String
+  Category       String
+  Description    String
+  Tag            String   
+  OwnerID        String?   @db.Uuid()
+  Public         Boolean  @default(false)
+  CreateAt       DateTime @default(now())
+  UpdateAt       DateTime @updatedAt
+  UpdateBy       String?   @db.Uuid()
+  Viewer         Int      @default(0)
+}
