@@ -11,6 +11,7 @@ const postweblinkcate = require('./src/routes/weblinkcategories/postweblinkcate'
 const deleteweblinkcate = require('./src/routes/weblinkcategories/deleteweblinkcate')
 const patchweblinkcate = require('./src/routes/weblinkcategories/patchweblinkcate')
 const deleteallweblinkcate = require('./src/routes/weblinkcategories/deleteallweblinkcate')
+const getannouncepagination = require('./src/routes/announcement/getannouncepagination')
 const postannounce = require('./src/routes/announcement/postannounce')
 const getannounce = require('./src/routes/announcement/getannounce')
 const deleteannounce = require('./src/routes/announcement/deleteannounce')
@@ -43,6 +44,7 @@ app.use(getweblink)
 app.use(postweblink)
 app.use(patchweblink)
 app.use(deleteweblink)
+app.use(getannouncepagination)
 
 app.get('/', ( req:Request, res:Response) => {
     res.send("OK")
