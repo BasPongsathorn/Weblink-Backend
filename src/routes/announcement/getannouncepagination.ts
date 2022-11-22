@@ -6,7 +6,6 @@ const router = express.Router();
 const prisma = new PrismaClient();
 router.use(express.json());
 
-
 router.get('/getannouncepagination', async( req:Request , res:Response) => {
     const page:any = req.query.page
     const limit:any = req.query.limit
