@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -14,39 +15,131 @@ model WeblinkCategories {
   WeblinkCategoryID String   @id @default(uuid()) @db.Uuid()
   CategoryName      String
   Public            Boolean  @default(false)
-  CreatedBy         String?   @db.Uuid()
+  CreatedBy         String?  @db.Uuid()
   CreateAt          DateTime @default(now())
   UpdateAt          DateTime @updatedAt
 
-  Weblinks Weblink[] @relation(name: "category")
+  Weblinks Weblink[] @relation(name: "WeblinkCategory")
 }
 
 model Weblink {
   WeblinkID         String   @id @default(uuid()) @db.Uuid()
   Title             String
+  Description       String
   Image             String
   URL               String
   WeblinkCategoryID String   @db.Uuid()
   Public            Boolean  @default(false)
-  CreatedBy         String?   @db.Uuid()
+  CreatedBy         String?  @db.Uuid()
   UpdatedBy         String?  @db.Uuid()
   CreateAt          DateTime @default(now())
   UpdateAt          DateTime @updatedAt
 
-  Category WeblinkCategories @relation(name: "category", fields: [WeblinkCategoryID], references: [WeblinkCategoryID])
+  Category WeblinkCategories @relation(name: "WeblinkCategory", fields: [WeblinkCategoryID], references: [WeblinkCategoryID])
+}
+
+model CategoryAnnouncement {
+  CategoryID    String         @id @default(uuid()) @db.Uuid()
+  CategoryName  String
+  CreatedBy     String?        @db.Uuid()
+  UpdatedBy     String?        @db.Uuid()
+  CreateAt      DateTime       @default(now())
+  UpdateAt      DateTime       @updatedAt
+  Announcements Announcement[] @relation(name: "CategoryAnnouncement")
 }
 
 model Announcement {
-  AnnouncementID String   @id @default(uuid()) @db.Uuid()
-  Title          String
-  Image          String
-  Category       String
-  Description    String
-  Tag            String   
-  OwnerID        String?   @db.Uuid()
-  Public         Boolean  @default(false)
+  AnnouncementID       String               @id @default(uuid()) @db.Uuid()
+  Title                String
+  Image                String
+  CategoryID           String               @db.Uuid()
+  Description          String
+  Tag                  String
+  OwnerID              String?              @db.Uuid()
+  Public               Boolean              @default(false)
+  CreateAt             DateTime             @default(now())
+  UpdateAt             DateTime             @updatedAt
+  CreatedBy            String?              @db.Uuid()
+  UpdateBy             String?              @db.Uuid()
+  StartDate            DateTime?
+  EndDate              DateTime?
+  Viewer               Int                  @default(0)
+  Hightlight           Boolean              @default(false)
+  AnnouncementCategory CategoryAnnouncement @relation(name: "CategoryAnnouncement", fields: [CategoryID], references: [CategoryID])
+}
+
+model Faq {
+  ID        String   @id @default(uuid()) @db.Uuid()
+  Question  String
+  Answer    String
+  CreateAt  DateTime @default(now())
+  UpdateAt  DateTime @updatedAt
+  CreatedBy String?  @db.Uuid()
+  UpdateBy  String?  @db.Uuid()
+}
+
+model FaqUser {
+  ID        String   @id @default(uuid()) @db.Uuid()
+  Name      String
+  Email     String
+  Message   String
+  CreateAt  DateTime @default(now())
+  UpdateAt  DateTime @updatedAt
+  CreatedBy String?  @db.Uuid()
+  UpdateBy  String?  @db.Uuid()
+}
+
+model Domain {
+  ID          String       @id @default(uuid()) @db.Uuid()
+  DomainName  String
+  CreateAt    DateTime     @default(now())
+  UpdateAt    DateTime     @updatedAt
+  CreatedBy   String?      @db.Uuid()
+  UpdateBy    String?      @db.Uuid()
+  DomainEmail LoginEmail[] @relation(name: "DomainEmail")
+}
+
+model LoginEmail {
+  ID         String    @id @default(uuid()) @db.Uuid()
+  Email      String    @unique
+  DomainID   String    @db.Uuid()
+  Otp        String?   @db.VarChar(20)
+  OtpExpired DateTime?
+  Role       Boolean   @default(false)
+  Remove     Boolean   @default(false)
+  Consent    Boolean   @default(false)
+  CreatedBy  String?   @db.Uuid()
+  UpdatedBy  String?   @db.Uuid()
+  CreateAt   DateTime  @default(now())
+  UpdateAt   DateTime  @updatedAt
+  Domains    Domain    @relation(name: "DomainEmail", fields: [DomainID], references: [ID])
+
+  TokenEmail Token[]
+}
+
+enum LoginType {
+  Email
+  AD
+}
+
+model Token {
+  ID         Int       @id @default(autoincrement()) @db.Integer
+  Token      String?   @unique
+  LoginType  LoginType
+  Expiretion DateTime
+
+  IP        String? @db.VarChar(30)
+  Device    String? @db.VarChar(100)
+  Latitude  String? @db.VarChar(100)
+  Longtitue String? @db.VarChar(100)
+
+  LoginEmail   LoginEmail? @relation(fields: [LoginEmailID], references: [ID])
+  LoginEmailID String?     @db.Uuid()
+}
+
+model Viewer {
+  ID             String   @id @default(uuid()) @db.Uuid()
+  AnnouncementID String   @db.Uuid()
+  Email          String?
   CreateAt       DateTime @default(now())
-  UpdateAt       DateTime @updatedAt
-  UpdateBy       String?   @db.Uuid()
-  Viewer         Int      @default(0)
 }

@@ -40,6 +40,7 @@ router.post("/addweblink" ,upload.single('Image'),async(req: Request, res: Respo
   
   const schema = Joi.object({
     Title: Joi.string().min(1).max(255).required(),
+    Description: Joi.string().min(1).max(255).required(),
     Image: Joi.string(),
     URL: Joi.string().min(1).max(255).required(),
     WeblinkCategoryID: Joi.string().min(1).max(255).required(),
@@ -78,6 +79,7 @@ router.post("/addweblink" ,upload.single('Image'),async(req: Request, res: Respo
 
   const payload = {
     Title: body.Title,
+    Description: body.Description,
     Image: img,
     URL: body.URL,
     WeblinkCategoryID: body.WeblinkCategoryID,

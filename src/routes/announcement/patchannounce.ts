@@ -4,6 +4,8 @@ import { RequestHandler } from "express";
 import { PrismaClient } from "@prisma/client";
 import { unlink } from 'node:fs';
 import multer from "multer";
+import AuthMiddleware from "../../middleware/AuthMiddlewere";
+import AdminMiddlewere from "../../middleware/AdminMiddlewere";
 
 
 const router = express.Router();
@@ -36,7 +38,7 @@ const upload = multer({
   },
 });
 
-router.patch("/updateannounce",upload.single('Image'), async (req: Request, res: Response) => {
+router.patch("/updateannounce",upload.single('Image'),AuthMiddleware, AdminMiddlewere, async (req: Request, res: Response) => {
   const schema = Joi.object({
     AnnouncementID: Joi.string().uuid().required(),
   });
@@ -73,8 +75,8 @@ router.patch("/updateannounce",upload.single('Image'), async (req: Request, res:
   }
 
   const oldImage = oldAnnouncement.Image
-  console.log(oldImage)
   const payload: any = {};
+
 
   if (body.Title) {
       payload['Title'] = body.Title ;
@@ -82,8 +84,8 @@ router.patch("/updateannounce",upload.single('Image'), async (req: Request, res:
   if (req.file?.filename) {
     payload['Image'] = req.file?.filename ;
   }
-  if (body.Category) {
-    payload['Category'] = body.Category ;
+  if (body.CategoryID) {
+    payload['CategoryID'] = body.CategoryID ;
   }
   if (body.Description) {
     payload['Description'] = body.Description ;

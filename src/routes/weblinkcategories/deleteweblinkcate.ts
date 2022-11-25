@@ -1,12 +1,14 @@
 import Joi from 'joi';
 import express , { Response , Request } from 'express'
 import { PrismaClient } from '@prisma/client';
+import AuthMiddleware from '../../middleware/AuthMiddlewere';
+import AdminMiddlewere from '../../middleware/AdminMiddlewere';
 
 const router = express.Router();
 const prisma = new PrismaClient();
 router.use(express.json());
 
-router.delete('/deleteweblinkcate', async( req:Request , res:Response) => {
+router.delete('/deleteweblinkcate',AuthMiddleware, AdminMiddlewere, async( req:Request , res:Response) => {
     const schema = Joi.object({
         WeblinkCategoryID : Joi.string().uuid().required(),
     });
@@ -28,7 +30,6 @@ router.delete('/deleteweblinkcate', async( req:Request , res:Response) => {
     }
 
     const query: any = req.query;
-    const prisma = new PrismaClient();
 
   
         const deleteWebCat = await prisma.weblinkCategories.delete({

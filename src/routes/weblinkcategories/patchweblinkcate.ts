@@ -2,12 +2,14 @@ import Joi, { any } from "joi";
 import express, { Response, Request } from "express";
 import { RequestHandler } from "express";
 import { PrismaClient } from "@prisma/client";
+import AuthMiddleware from "../../middleware/AuthMiddlewere";
+import AdminMiddlewere from "../../middleware/AdminMiddlewere";
 
 const router = express.Router();
 router.use(express.json());
 const prisma = new PrismaClient();
 
-router.patch('/updateweblinkcate', async( req:Request , res:Response) => {
+router.patch('/updateweblinkcate',AuthMiddleware, AdminMiddlewere, async( req:Request , res:Response) => {
     const schema = Joi.object({
         WeblinkCategoryID: Joi.string().uuid().required(),
     });

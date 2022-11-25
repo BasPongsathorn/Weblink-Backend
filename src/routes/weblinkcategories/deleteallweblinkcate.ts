@@ -5,9 +5,9 @@ const router = express.Router();
 const prisma = new PrismaClient();
 router.use(express.json());
 
-router.delete('/deleteallweblinkcate', async( req:Request , res:Response) => {
-    const findWeblinkCate = await prisma.weblinkCategories.deleteMany();
-    return res.json(findWeblinkCate);
+router.delete('/deleteallwebcate', async( req:Request , res:Response) => {
+    const deleteallwebcate = await prisma.weblinkCategories.deleteMany();
+    return res.json(deleteallwebcate);
     
 })
 

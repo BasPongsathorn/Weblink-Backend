@@ -73,8 +73,7 @@ router.patch("/updateweblink",upload.single('Image'), async (req: Request, res: 
   }
 
   const oldImage = oldweblink.Image
-  console.log(oldImage)
-  const payload: any = {};
+  const payload: any = [];
 
   if (body.Title) {
       payload['Title'] = body.Title ;
@@ -87,6 +86,9 @@ router.patch("/updateweblink",upload.single('Image'), async (req: Request, res: 
   }
   if (body.WeblinkCategoryID) {
     payload['WeblinkCategoryID'] = body.WeblinkCategoryID ;
+  }
+  if (body.Description) {
+    payload['Description'] = body.Description ;
   }
  
 

@@ -2,13 +2,15 @@ import Joi from "joi";
 import express, { Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
 import { unlink } from 'node:fs';
+import AuthMiddleware from "../../middleware/AuthMiddlewere";
+import AdminMiddlewere from "../../middleware/AdminMiddlewere";
 
 
 const router = express.Router();
 const prisma = new PrismaClient();
 router.use(express.json());
 
-router.delete("/deleteweblink", async (req: Request, res: Response) => {
+router.delete("/deleteweblink",AuthMiddleware, AdminMiddlewere, async (req: Request, res: Response) => {
   const schema = Joi.object({
     WeblinkID: Joi.string().uuid().required(),
   });
@@ -37,6 +39,9 @@ router.delete("/deleteweblink", async (req: Request, res: Response) => {
        WeblinkID: query. WeblinkID,
     },
   });
+ 
+
+
 
     if (oldWeblink === undefined || oldWeblink === null){
        return res.status(422).json({
@@ -46,7 +51,7 @@ router.delete("/deleteweblink", async (req: Request, res: Response) => {
     }
    
     if(oldWeblink.Image != null){
-        unlink(`./src/image/image-weblink/${oldWeblink.Image}`, () => {});
+        unlink(`././src/image/image-weblink/${oldWeblink.Image}`, () => {});
     }
   
 
