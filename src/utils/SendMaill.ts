@@ -3,6 +3,7 @@ import { templateOTP } from './mailtemplates/templateOTP';
 
 const O365_EMAIL = process.env.O365_EMAIL;
 const O365_APPPASSWORD = process.env.O365_APPPASSWORD;
+const O365_HOST= process.env.O365_HOST;
 
 const SendMailOTP = async (OTP: number, SendTo: string) => {
     // create reusable transporter object using the default SMTP transport
