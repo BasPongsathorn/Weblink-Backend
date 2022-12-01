@@ -14,7 +14,7 @@ const root = express.Router();
 
 root.post('/postWeblinkCategory', AuthMiddleware, AdminMiddlewere, postWeblinkCategory)
 root.get('/getWeblinkCategory', AuthMiddleware, getWeblinkCategory)
-root.patch('/patchWeblinkCategory', AuthMiddleware, AdminMiddlewere, updateWeblinkCategory)
+root.patch('/updateWeblinkCategory', AuthMiddleware, AdminMiddlewere, updateWeblinkCategory)
 root.delete('/deleteWeblinkCategory', AuthMiddleware, AdminMiddlewere, deleteWeblinkCategory)
 root.delete('/deleteAllWeblinkCategory', AuthMiddleware, AdminMiddlewere, deleteAllWeblinkcategory)
 

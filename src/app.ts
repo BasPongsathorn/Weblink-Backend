@@ -31,6 +31,9 @@ app.use(
         origin: config.clientOrigins[config.nodeEnv],
     }),
 );
+
+app.use('/image-announcement', express.static('image/image-announcement'));
+app.use('/image-weblink', express.static('image/image-weblink'));
 app.use(helmet());
 app.use(morgan('tiny'));
 

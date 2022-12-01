@@ -84,7 +84,7 @@ const updateAnnounce = async (req: Request, res: Response) => {
   // console.log(oldImage)
 
   if(update != null && oldImage){
-      unlink(`../../image/image-announcement/${oldImage}`, () => {});
+    unlink(`././src/image/image-Announcement/${oldAnnouncement.Image}`, () => {});
   }
 
   return res.json(update);

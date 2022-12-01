@@ -30,8 +30,9 @@ const postAnnounce = async(req: Request, res: Response) => {
 
   const { error } = schema.validate(req.body, options);
 
+
   if (error) {
-    unlink(`../../image/image-announcement/${req.file?.filename}`, () => {});
+    unlink(`././src/image/image-Announcement/${req.file?.filename}`, () => {});
     return res.status(422).json({
       status: 422,
       message: "Unprocessable Entity",
@@ -66,8 +67,8 @@ let status = false
     Tag: body.Tag,
     CategoryID: body.CategoryID,
     Public: status,
-    StartDatae: body.StartDatae,
-    EndDate: body.EndDate,
+    StartDate: new Date(body.StartDate),
+    EndDate: new Date(body.EndDate),
     
     // Role: body.Role,
     // Remove: body.Remove

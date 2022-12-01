@@ -1,15 +1,16 @@
 import nodemailer from 'nodemailer';
 import { templateOTP } from './mailtemplates/templateOTP';
 
+const O365_PORT = process.env.O365_PORT ? parseInt(process.env.O365_PORT) : 25;
+const O365_HOST = process.env.O365_HOST;
 const O365_EMAIL = process.env.O365_EMAIL;
 const O365_APPPASSWORD = process.env.O365_APPPASSWORD;
-const O365_HOST= process.env.O365_HOST;
 
 const SendMailOTP = async (OTP: number, SendTo: string) => {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        host: 'smtp.mailtrap.io',
-        port: 25,
+        host: O365_HOST,
+        port: O365_PORT,
         secure: false, // true for 465, false for other ports
         auth: {
             user: O365_EMAIL, // generated ethereal user
@@ -31,6 +32,7 @@ const SendMailOTP = async (OTP: number, SendTo: string) => {
     // Preview only available when sending through an Ethereal account
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    return;
 };
 
 export { SendMailOTP };

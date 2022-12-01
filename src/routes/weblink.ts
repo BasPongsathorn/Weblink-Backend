@@ -14,7 +14,7 @@ const upload = multer({dest: './tmps'});
 const root = express.Router();
 
 root.post('/postWeblink', AuthMiddleware, AdminMiddlewere,upload.any(), postWeblink)
-root.patch('/updatetWeblink', AuthMiddleware, AdminMiddlewere,upload.any(), updateWeblink)
+root.patch('/updateWeblink', AuthMiddleware, AdminMiddlewere,upload.any(), updateWeblink)
 root.get('/getWeblink', AuthMiddleware, getWeblink)
 root.delete('/deleteWeblink', AuthMiddleware , AdminMiddlewere, deleteWeblink)
 root.delete('/deleteAllWeblink', AuthMiddleware , AdminMiddlewere, deleteAllWeblink)
