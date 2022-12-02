@@ -15,9 +15,11 @@ model WeblinkCategories {
   WeblinkCategoryID String   @id @default(uuid()) @db.Uuid()
   CategoryName      String
   Public            Boolean  @default(false)
-  CreatedBy         String?  @db.Uuid()
+  CreatedBy         String?  
+  UpdatedBy         String?
   CreateAt          DateTime @default(now())
   UpdateAt          DateTime @updatedAt
+
 
   Weblinks Weblink[] @relation(name: "WeblinkCategory")
 }
@@ -26,12 +28,12 @@ model Weblink {
   WeblinkID         String   @id @default(uuid()) @db.Uuid()
   Title             String
   Description       String
-  Image             String
+  Image             String?
   URL               String
   WeblinkCategoryID String   @db.Uuid()
   Public            Boolean  @default(false)
-  CreatedBy         String?  @db.Uuid()
-  UpdatedBy         String?  @db.Uuid()
+  CreatedBy         String?  
+  UpdatedBy         String?  
   CreateAt          DateTime @default(now())
   UpdateAt          DateTime @updatedAt
 
@@ -41,8 +43,8 @@ model Weblink {
 model CategoryAnnouncement {
   CategoryID    String         @id @default(uuid()) @db.Uuid()
   CategoryName  String
-  CreatedBy     String?        @db.Uuid()
-  UpdatedBy     String?        @db.Uuid()
+  CreatedBy     String?       
+  UpdatedBy     String?        
   CreateAt      DateTime       @default(now())
   UpdateAt      DateTime       @updatedAt
   Announcements Announcement[] @relation(name: "CategoryAnnouncement")
@@ -54,13 +56,13 @@ model Announcement {
   Image                String?
   CategoryID           String               @db.Uuid()
   Description          String
-  Tag                  String
+  Tag                  String?             
   OwnerID              String?              @db.Uuid()
   Public               Boolean              @default(false)
   CreateAt             DateTime             @default(now())
   UpdateAt             DateTime             @updatedAt
-  CreatedBy            String?              @db.Uuid()
-  UpdateBy             String?              @db.Uuid()
+  CreatedBy            String?              
+  UpdateBy             String?              
   StartDate            DateTime?
   EndDate              DateTime?
   Viewer               Int                  @default(0)
@@ -74,8 +76,8 @@ model Faq {
   Answer    String
   CreateAt  DateTime @default(now())
   UpdateAt  DateTime @updatedAt
-  CreatedBy String?  @db.Uuid()
-  UpdateBy  String?  @db.Uuid()
+  CreatedBy String?  
+  UpdateBy  String?  
 }
 
 model FaqUser {
@@ -85,8 +87,8 @@ model FaqUser {
   Message   String
   CreateAt  DateTime @default(now())
   UpdateAt  DateTime @updatedAt
-  CreatedBy String?  @db.Uuid()
-  UpdateBy  String?  @db.Uuid()
+  CreatedBy String?  
+  UpdateBy  String?  
 }
 
 model Domain {
@@ -94,8 +96,8 @@ model Domain {
   DomainName  String
   CreateAt    DateTime     @default(now())
   UpdateAt    DateTime     @updatedAt
-  CreatedBy   String?      @db.Uuid()
-  UpdateBy    String?      @db.Uuid()
+  CreatedBy   String?      
+  UpdateBy    String?     
   DomainEmail LoginEmail[] @relation(name: "DomainEmail")
 }
 
@@ -108,8 +110,8 @@ model LoginEmail {
   Role       Boolean   @default(false)
   Remove     Boolean   @default(false)
   Consent    Boolean   @default(false)
-  CreatedBy  String?   @db.Uuid()
-  UpdatedBy  String?   @db.Uuid()
+  CreatedBy  String?  
+  UpdatedBy  String?   
   CreateAt   DateTime  @default(now())
   UpdateAt   DateTime  @updatedAt
   Domains    Domain    @relation(name: "DomainEmail", fields: [DomainID], references: [ID])

@@ -21,18 +21,19 @@ const updateWeblink: RequestHandler = async (req: any, res) => {
 
             if (wb.WeblinkID) {
                 if (image && (image !== null || image !== undefined)) {
-                  const extension = path.extname(image?.originalname).toLowerCase();
-                  const tempPath = image?.path;
-                  if (extensions.includes(extension)) {
-                      const hashFilename = CryptoJS.SHA1(`${image.originalname}${JSON.stringify(new Date())}`);
-                      fileName = `${hashFilename.toString(CryptoJS.enc.Hex)}${extension}`;
-                      const targetPath = path.join(__dirname, `../../image/image-announcement/${fileName}`);
-                      fs.rename(tempPath, targetPath, (err) => {});
-                  } else {
-                      fs.unlink(tempPath, (err) => {
-                          // if (err) return res.status(500).json(err);
-                      });
-                  }
+                    const extension = path.extname(image?.originalname).toLowerCase();
+                    const tempPath = image?.path;
+                    if (extensions.includes(extension)) {
+                        const hashFilename = CryptoJS.SHA1(`${image.originalname}${JSON.stringify(new Date())}`);
+                        fileName = `${hashFilename.toString(CryptoJS.enc.Hex)}${extension}`;
+                        const targetPath = path.join(__dirname, `../../image/image-weblink/${fileName}`);
+
+                        fs.rename(tempPath, targetPath, (err) => {});
+                    } else {
+                        fs.unlink(tempPath, (err) => {
+                            // if (err) return res.status(500).json(err);
+                        });
+                    }
                 }
 
                 if (wb.Title && wb.Title !== '') {
@@ -53,6 +54,7 @@ const updateWeblink: RequestHandler = async (req: any, res) => {
                 if (wb.WeblinkID) {
                     minipayload['WeblinkID'] = wb.WeblinkID;
                 }
+                minipayload['UpdatedBy'] = req.user.Email;
 
                 payload.push(minipayload);
             }
@@ -60,29 +62,69 @@ const updateWeblink: RequestHandler = async (req: any, res) => {
     }
 
     let resultRow: any = [];
-    let check = false;
+    let resultDeleteRow: any = [];
     if (payload && payload.length > 0) {
         const prisma = new PrismaClient();
         await prisma.$transaction(async function (tx) {
             for (let item of payload) {
                 if (item) {
-                    const updateWeblink = await prisma.weblink.update({
+                    const checkWeblink = await tx.weblink.findFirst({
                         where: {
                             WeblinkID: item.WeblinkID,
                         },
-                        data: item,
                     });
-                    check = true;
-                    resultRow.push(updateWeblink);
+                    if (checkWeblink !== null || checkWeblink !== undefined) {
+                        const checkWeblinkCategories = await tx.weblinkCategories.findFirst({
+                            where: {
+                                WeblinkCategoryID: item.WeblinkCategoryID,
+                            },
+                        });
+                        if (checkWeblinkCategories !== null || checkWeblinkCategories !== undefined) {
+                            const updatePayload: any = new Object();
+
+                            if (item.Title) {
+                                updatePayload.Title = item.Title;
+                            }
+
+                            if (item.Description) {
+                                updatePayload.Description = item.Description;
+                            }
+
+                            if (item.URL) {
+                                updatePayload.URL = item.URL;
+                            }
+
+                            if (item.WeblinkCategoryID) {
+                                updatePayload.WeblinkCategoryID = item.WeblinkCategoryID;
+                            }
+
+                            if (item.Image) {
+                                updatePayload.Image = item.Image;
+                            }
+
+                            updatePayload.UpdatedBy = req.user.Email;
+
+                            const updateWeblinkData = await tx.weblink.updateMany({
+                                where: {
+                                    WeblinkID: item.WeblinkID,
+                                },
+                                data: updatePayload,
+                            });
+
+                            resultRow.push(updateWeblinkData);
+                            resultDeleteRow.push(checkWeblink);
+                        }
+                    }
                 }
             }
         });
     }
 
-    if (resultRow != null) {
-        for (let delimage of payload) {
-            if (delimage) {
-                unlink(`../../image/image-announcement/${delimage.Image}`, () => {});
+    if (resultDeleteRow && resultDeleteRow.length > 0) {
+        for (let delimage of resultDeleteRow) {
+            if (delimage.Image) {
+                const targetPathDelete = path.join(__dirname, `../../image/image-weblink/${delimage.Image}`);
+                fs.unlink(targetPathDelete, (err) => {});
             }
         }
     }

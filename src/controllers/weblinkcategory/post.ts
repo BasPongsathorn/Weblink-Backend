@@ -9,7 +9,7 @@ router.use(express.json());
 const prisma = new PrismaClient();
 
 
-const postWeblinkCategory = async(req: Request, res: Response) => {
+const postWeblinkCategory = async(req: any, res: Response) => {
 
   
   const schema = Joi.object({
@@ -38,6 +38,7 @@ const postWeblinkCategory = async(req: Request, res: Response) => {
 
   const payload = {
     CategoryName: body.CategoryName,
+    CreatedBy: req.user.Email
   
     // Role: body.Role,
     // Remove: body.Remove

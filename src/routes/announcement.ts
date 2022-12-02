@@ -9,6 +9,7 @@ import AdminMiddlewere from '../middleware/AdminMiddlewere';
 
 import multer from 'multer';
 import express, { Response, Request } from "express";
+import { replaceAll } from '.././utils/helper'
 
 
 
@@ -19,7 +20,8 @@ const fileStorageEngine = multer.diskStorage({
       cb(null, "./src/image/image-announcement");
     },
     filename: (req: Request, file, cb) => {
-      cb(null, Date.now() + "__" + file.originalname);
+      const originalName = replaceAll(file.originalname, ' ', '-');
+      cb(null, Date.now() + "_" + originalName)
     },
   });
   

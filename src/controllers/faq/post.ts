@@ -10,7 +10,7 @@ router.use(express.json());
 const prisma = new PrismaClient();
 
 
-const postFaq = async(req: Request, res: Response) => {
+const postFaq = async(req: any, res: Response) => {
 
   
   const schema = Joi.object({
@@ -42,6 +42,7 @@ const postFaq = async(req: Request, res: Response) => {
   const payload = {
     Question: body.Question,
     Answer: body.Answer,
+    CreatedBy: req.user.Email
   
     // Role: body.Role,
     // Remove: body.Remove

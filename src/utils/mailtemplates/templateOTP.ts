@@ -83,7 +83,7 @@ const templateOTP = (OTP: number) => {
                     <h3 style="text-align: left;">Thank you for choosing Weblink. Use this OTP to complete your Sign Up procedures and verify your account on Weblink. Remember, Never share this OTP with anyone.</p>
                     <div class="otp">
                         <div class="otp-code">
-                            <p class="text-otp">${OTP}/p>
+                            <p class="text-otp">${OTP}</p>
                         </div>
                     </div>
                     <h3 class="foot1" style="text-align: left; margin-top: 50px;">Best Regards,</h3>

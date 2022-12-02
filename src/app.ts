@@ -32,8 +32,8 @@ app.use(
     }),
 );
 
-app.use('/image-announcement', express.static('image/image-announcement'));
-app.use('/image-weblink', express.static('image/image-weblink'));
+app.use('/image-announcement', express.static('src/image/image-announcement'));
+app.use('/image-weblink', express.static('src/image/image-weblink'));
 app.use(helmet());
 app.use(morgan('tiny'));
 

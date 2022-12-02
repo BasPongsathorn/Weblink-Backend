@@ -10,11 +10,12 @@ import AdminMiddlewere from "../middleware/AdminMiddlewere";
 import AuthMiddleware from "../middleware/AuthMiddlewere";
 
 
-const upload = multer({dest: './tmps'});
+const upload = multer({dest: '../../tmps'});
 const root = express.Router();
 
-root.post('/postWeblink', AuthMiddleware, AdminMiddlewere,upload.any(), postWeblink)
-root.patch('/updateWeblink', AuthMiddleware, AdminMiddlewere,upload.any(), updateWeblink)
+
+root.post('/postWeblink',upload.any(), AuthMiddleware, AdminMiddlewere, postWeblink)
+root.patch('/updateWeblink',upload.any(), AuthMiddleware, AdminMiddlewere, updateWeblink)
 root.get('/getWeblink', AuthMiddleware, getWeblink)
 root.delete('/deleteWeblink', AuthMiddleware , AdminMiddlewere, deleteWeblink)
 root.delete('/deleteAllWeblink', AuthMiddleware , AdminMiddlewere, deleteAllWeblink)

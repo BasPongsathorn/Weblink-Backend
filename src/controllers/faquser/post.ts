@@ -3,13 +3,15 @@ import Joi from "joi";
 import express, { Response, Request, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import AuthMiddleware from "../../middleware/AuthMiddlewere";
+import { SendMailFAQ } from '../../utils/SendFaq';
 
 const router = express.Router();
 router.use(express.json());
 const prisma = new PrismaClient();
 
+const adminEmail:any = process.env.AdminFAQ
 
-const postFaqUser = async(req: Request, res: Response) => {
+const postFaqUser = async(req: any, res: Response) => {
 
   
   const schema = Joi.object({
@@ -42,6 +44,7 @@ const postFaqUser = async(req: Request, res: Response) => {
     Name: body.Name,
     Email: body.Email,
     Message: body.Message,
+    CreatedBy: req.user.Email
   
     // Role: body.Role,
     // Remove: body.Remove
@@ -51,8 +54,17 @@ const postFaqUser = async(req: Request, res: Response) => {
   const createfaq = await prisma.faqUser.create({
     data: payload,
   });
+  if (createfaq) {
+    await SendMailFAQ(payload.Message, adminEmail);
+    return res.status(201).json({
+      status: 201,
+      message: 'We have received your question',
+    })
+    
+          
+  }
 
-  
+
   return res.status(201).json(createfaq);
   
 }

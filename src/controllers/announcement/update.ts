@@ -13,7 +13,7 @@ router.use(express.json());
 const prisma = new PrismaClient();
 
 
-const updateAnnounce = async (req: Request, res: Response) => {
+const updateAnnounce = async (req: any, res: Response) => {
   const schema = Joi.object({
     AnnouncementID: Joi.string().uuid().required(),
   });
@@ -26,14 +26,7 @@ const updateAnnounce = async (req: Request, res: Response) => {
 
   const { error } = schema.validate(req.body, options);
 
-  if (error) {
-    unlink(`../../image/image-announcement/${req.file?.filename}`, () => {});
-    return res.status(422).json({
-      status: 422,
-      message: "Unprocessable Entity",
-      data: error.details,
-    });
-  }
+
 
   const body = req.body;
   const prisma = new PrismaClient();
@@ -68,10 +61,17 @@ const updateAnnounce = async (req: Request, res: Response) => {
   if (body.Tag) {
     payload['Tag'] = body.Tag ;
   }
+  if (new Date(body.StartDate)) {
+    payload['StartDate'] = new Date(body.StartDate) ;
+  }
+  if (new Date(body.EndDate)) {
+    payload['EndDate'] = new Date(body.EndDate) ;
+  }
+  payload['UpdateBy'] = req.user.Email
+
 
   const img: any = req.file?.filename;
 
- 
 
   const update = await prisma.announcement.update({
     where: {
@@ -81,7 +81,14 @@ const updateAnnounce = async (req: Request, res: Response) => {
     
   });
   
-  // console.log(oldImage)
+  if (error) {
+    unlink(`././src/image/image-Announcement/${oldAnnouncement.Image}`, () => {});
+    return res.status(422).json({
+      status: 422,
+      message: "Unprocessable Entity",
+      data: error.details,
+    });
+  }
 
   if(update != null && oldImage){
     unlink(`././src/image/image-Announcement/${oldAnnouncement.Image}`, () => {});

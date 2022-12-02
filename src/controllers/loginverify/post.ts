@@ -63,7 +63,7 @@ const postLoginVerify =  async (req: Request, res: Response) => {
                 Email: body.Email,
             },
             LOGIN_KEY,
-            { expiresIn: '1h' },
+            { expiresIn: '1d' },
         );
 
         if (AccessToken) {
@@ -71,7 +71,7 @@ const postLoginVerify =  async (req: Request, res: Response) => {
                 data: {
                     Token: AccessToken,
                     LoginType: body.LoginType,
-                    Expiretion: new Date(dayjs().add(1, 'days').format('YYYY-MM-DDTHH:mm:ss')),
+                    Expiretion: new Date(dayjs().add(1, 'day').format('YYYY-MM-DDTHH:mm:ss')),
                 },
             });
             return res.json({

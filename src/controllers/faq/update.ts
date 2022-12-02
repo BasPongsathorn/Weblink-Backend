@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.json());
 const prisma = new PrismaClient();
 
-const updateFaq = async ( req:Request , res:Response) => {
+const updateFaq = async ( req:any , res:Response) => {
     const schema = Joi.object({
         ID: Joi.string().uuid().required(),
     });
@@ -40,6 +40,7 @@ const updateFaq = async ( req:Request , res:Response) => {
     if (body.Answer) {
         payload['Answer'] = body.Answer;
     }
+    payload.UpdateBy = req.user.Email
 
 
     const update = await prisma.faq.update({

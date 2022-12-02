@@ -11,14 +11,13 @@ router.use(express.json());
 const prisma = new PrismaClient();
 
 
-const postAnnounce = async(req: Request, res: Response) => {
+const postAnnounce = async(req: any, res: Response) => {
 
   
   const schema = Joi.object({
     Title: Joi.string().min(1).max(255).required(),
     Image: Joi.string(),
     Description: Joi.string().min(1).max(255).required(),
-    Tag: Joi.string().min(1).max(255),
     CategoryID: Joi.string().min(1).max(255).required(),
   });
 
@@ -30,9 +29,8 @@ const postAnnounce = async(req: Request, res: Response) => {
 
   const { error } = schema.validate(req.body, options);
 
-
   if (error) {
-    unlink(`././src/image/image-Announcement/${req.file?.filename}`, () => {});
+    unlink(`././src/image/image-announcement/${req.file?.filename}`, () => {});
     return res.status(422).json({
       status: 422,
       message: "Unprocessable Entity",
@@ -46,7 +44,16 @@ const postAnnounce = async(req: Request, res: Response) => {
 
 
 let imagestatus = null
+let tagstatus 
 let resultimage
+
+  if(body.Tag === "" || body.Tag == undefined ){
+    tagstatus = null
+  }
+  else {
+    tagstatus = body.Tag
+  }
+
   if (img === null || img === undefined) {
     resultimage = imagestatus
   }
@@ -64,16 +71,16 @@ let status = false
     Title: body.Title,
     Image: resultimage,
     Description: body.Description,
-    Tag: body.Tag,
+    Tag: tagstatus,
     CategoryID: body.CategoryID,
     Public: status,
     StartDate: new Date(body.StartDate),
     EndDate: new Date(body.EndDate),
+    CreatedBy: req.user.Email
     
     // Role: body.Role,
     // Remove: body.Remove
   };
-
 
   const user = await prisma.announcement.create({
     data: payload,

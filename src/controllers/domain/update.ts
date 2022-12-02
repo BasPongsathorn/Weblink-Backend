@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.json());
 const prisma = new PrismaClient();
 
-const updateDomain = async( req:Request , res:Response) => {
+const updateDomain = async( req:any , res:Response) => {
     const schema = Joi.object({
         ID: Joi.string().uuid().required(),
     });
@@ -37,6 +37,7 @@ const updateDomain = async( req:Request , res:Response) => {
     if (body.DomainName) {
         payload['DomainName'] = body.DomainName;
     }
+    payload['UpdateBy'] = req.user.Email
   
 
 

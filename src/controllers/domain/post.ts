@@ -10,7 +10,7 @@ router.use(express.json());
 const prisma = new PrismaClient();
 
 
-const postDomanin = async(req: Request, res: Response) => {
+const postDomanin = async(req: any, res: Response) => {
 
   
   const schema = Joi.object({

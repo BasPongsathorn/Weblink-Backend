@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.json());
 const prisma = new PrismaClient();
 
-const updateCategoryAnnounce = async( req:Request , res:Response) => {
+const updateCategoryAnnounce = async( req:any , res:Response) => {
     const schema = Joi.object({
         CategoryID: Joi.string().uuid().required(),
     });
@@ -37,6 +37,7 @@ const updateCategoryAnnounce = async( req:Request , res:Response) => {
     if (body.CategoryName) {
         payload['CategoryName'] = body.CategoryName ;
     }
+    payload['UpdatedBy'] = req.user.Email
 
     const update = await prisma.categoryAnnouncement.update({
         where: {
