@@ -63,6 +63,10 @@ const updateWeblink: RequestHandler = async (req: any, res) => {
 
     let resultRow: any = [];
     let resultDeleteRow: any = [];
+    let status = false;
+    if (body.Public === '1') {
+        status = true;
+    }
     if (payload && payload.length > 0) {
         const prisma = new PrismaClient();
         await prisma.$transaction(async function (tx) {
@@ -100,6 +104,9 @@ const updateWeblink: RequestHandler = async (req: any, res) => {
 
                             if (item.Image) {
                                 updatePayload.Image = item.Image;
+                            }
+                            if (item.Public) {
+                                updatePayload.Public = status;
                             }
 
                             updatePayload.UpdatedBy = req.user.Email;

@@ -1,3 +1,5 @@
+const img = "../../image/image-templateOPT/finXlogo.png"
+
 const templateOTP = (OTP: number) => {
     return `
     <!DOCTYPE html>
@@ -77,7 +79,7 @@ const templateOTP = (OTP: number) => {
             <div class="container">
                 <div class="item">
                     <div class="img">
-                         <img class="logo" src="finXlogo.png"/>
+                         <img class="logo" src=${img}/>
                     </div>
                     <h1>OTP Code for sign in</h1>
                     <h3 style="text-align: left;">Thank you for choosing Weblink. Use this OTP to complete your Sign Up procedures and verify your account on Weblink. Remember, Never share this OTP with anyone.</p>

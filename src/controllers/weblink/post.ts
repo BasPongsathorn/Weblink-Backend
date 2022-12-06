@@ -10,12 +10,15 @@ const postWeblink: RequestHandler = async (req: any, res) => {
 
     const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
     const payload: any = [];
-
+    let status = false;
+    if (body.Public === '1') {
+        status = true;
+    }
     if (wbs && wbs.length > 0) {
         for (let i = 0; i < wbs.length; i++) {
             const wb = body.wb[i];
             const image = req.files[i];
-            console.log(req.files)
+            console.log(req.files);
 
             if (image || (wb.Title && wb.Description && wb.URL && wb.WeblinkCategoryID)) {
                 const prisma = new PrismaClient();
@@ -41,15 +44,14 @@ const postWeblink: RequestHandler = async (req: any, res) => {
                                 URL: wb.URL,
                                 WeblinkCategoryID: wb.WeblinkCategoryID,
                                 Image: fileName,
-                                CreatedBy: req.user.Email
+                                CreatedBy: req.user.Email,
+                                Public:status
                             });
-
                         } else {
                             fs.unlink(tempPath, (err) => {
                                 // if (err) return res.status(500).json(err);
                             });
                         }
-
                     } else {
                         let fileName = null;
                         payload.push({
@@ -58,8 +60,8 @@ const postWeblink: RequestHandler = async (req: any, res) => {
                             URL: wb.URL,
                             WeblinkCategoryID: wb.WeblinkCategoryID,
                             Image: fileName,
-                            CreatedBy: req.user.Email
-
+                            CreatedBy: req.user.Email,
+                            Public:status
                         });
                     }
                 } else
@@ -75,7 +77,6 @@ const postWeblink: RequestHandler = async (req: any, res) => {
         }
     }
 
-    
     let resultRow: any = null;
     if (payload && payload.length > 0) {
         const prisma = new PrismaClient();

@@ -107,8 +107,7 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
             message: 'Type ไม่ถูกต้อง',
         });
     }
-
-  
+   
    
     const findFaq = await prisma.announcement.findMany({
         take: reslimit, 
@@ -135,6 +134,10 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
     return res.json(findFaq);
 };
 
+
+
+
+
 const getAnnounceSingle = async (req: Request, res: Response) => {
     const AnnouncementID = req.body.AnnouncementID;
 
@@ -144,7 +147,7 @@ const getAnnounceSingle = async (req: Request, res: Response) => {
         },
     });
 
-
+   
     if (findSingleAnnounce !== null && findSingleAnnounce !== undefined) {
         const FilePath = process.env.FilePath;
         const singleAnnounce: any = {

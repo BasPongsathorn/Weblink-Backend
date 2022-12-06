@@ -34,11 +34,16 @@ const postWeblinkCategory = async(req: any, res: Response) => {
   }
  
   const body = req.body;
+  let status = false
+ if(body.Public === "1"){
+    status = true
+ }
  
 
   const payload = {
     CategoryName: body.CategoryName,
-    CreatedBy: req.user.Email
+    CreatedBy: req.user.Email,
+    Public:status
   
     // Role: body.Role,
     // Remove: body.Remove

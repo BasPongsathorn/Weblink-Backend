@@ -33,9 +33,16 @@ const updateWeblinkCategory= async( req:any , res:Response) => {
     const body = req.body;
     const prisma = new PrismaClient();
     const payload: any = {};
+    let status = false
+ if(body.Public === "1"){
+    status = true
+ }
 
     if (body.CategoryName) {
         payload['CategoryName'] = body.CategoryName ;
+    }
+    if (body.Public) {
+        payload['Public'] = status ;
     }
     payload['UpdatedBy'] = req.user.Email
 
