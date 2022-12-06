@@ -11,6 +11,58 @@ router.use(express.json());
 const getAnnounce : RequestHandler = async (req: Request, res: Response) => {
     const page: any = req.query.page;
     const limit: any = req.query.limit;
+    const categoryID: any = req.query.categoryID
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    let findWebCat:any
+
+    const postCount = await prisma.announcement.count();
+    if(categoryID === "" || categoryID === null || categoryID === undefined)
+    {
+        findWebCat = await prisma.announcement.findMany({
+                orderBy: {
+                    CreateAt: 'desc',
+                },
+            
+            });
+    }
+     else{
+        findWebCat = await prisma.announcement.findMany({
+            where: {
+                CategoryID:categoryID
+            },
+            orderBy: {
+                CreateAt: 'desc',
+            },
+        
+        });
+     }
+
+    const pagina = findWebCat.slice(startIndex, endIndex);
+    const FilePath = process.env.FilePath;
+
+    const paginations: any = [];
+    if (pagina && pagina.length > 0) {
+        pagina.map((item: any) => {
+            const itemObject: any = {
+                ...item,
+                ImageFullpath: item.Image ? `${FilePath}/image-announcement/${item.Image}` : null,
+            };
+            paginations.push(itemObject);
+        });
+    }
+
+    const result = {
+        postCount: postCount,
+        paginations: paginations,
+    };
+    return res.json(result);
+};
+
+const getAnnounceMain : RequestHandler = async (req: Request, res: Response) => {
+    const page: any = req.query.page;
+    const limit: any = req.query.limit;
 
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
@@ -46,6 +98,7 @@ const getAnnounce : RequestHandler = async (req: Request, res: Response) => {
 const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) => {
     const PopularType: any = req.query.PopularType;
     const limit: any = req.query.limit ?? 10;
+    const reslimit = parseInt(limit)
     const ArrayType = ['day', 'week', 'month'];
 
     if (!ArrayType.includes(PopularType)) {
@@ -56,7 +109,7 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
     }
 
     const findFaq = await prisma.announcement.findMany({
-        take: limit,
+        take: reslimit, 
         orderBy: {
             Viewer: 'desc',
         },
@@ -73,6 +126,8 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
                     },
                 },
             ],
+            Public: true
+         
         },
     });
     return res.json(findFaq);
@@ -100,6 +155,7 @@ const getAnnounceSingle = async (req: Request, res: Response) => {
                         },
                     },
                 ],
+                Public:true
             },
             orderBy: {
                 Viewer: 'asc',
@@ -114,4 +170,4 @@ const getAnnounceSingle = async (req: Request, res: Response) => {
         });
 };
 
-export { getAnnounce , getAnnouncePopular , getAnnounceSingle }  ;
+export { getAnnounce , getAnnouncePopular , getAnnounceSingle , getAnnounceMain}  ;

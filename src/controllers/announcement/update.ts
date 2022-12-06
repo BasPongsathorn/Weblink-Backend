@@ -44,7 +44,10 @@ const updateAnnounce = async (req: any, res: Response) => {
 
   const oldImage = oldAnnouncement.Image
   const payload: any = {};
-
+  let status = false
+  if(body.Public === "1"){
+     status = true
+  }
 
   if (body.Title) {
       payload['Title'] = body.Title ;
@@ -60,6 +63,9 @@ const updateAnnounce = async (req: any, res: Response) => {
   }
   if (body.Tag) {
     payload['Tag'] = body.Tag ;
+  }
+  if (body.Public) {
+    payload['Public'] = status ;
   }
   if (new Date(body.StartDate)) {
     payload['StartDate'] = new Date(body.StartDate) ;

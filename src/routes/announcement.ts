@@ -1,4 +1,4 @@
-import { getAnnounce , getAnnouncePopular , getAnnounceSingle} from '../controllers/announcement/get';
+import { getAnnounce , getAnnouncePopular , getAnnounceSingle, getAnnounceMain} from '../controllers/announcement/get';
 import { deleteAnnounce } from '../controllers/announcement/delete';
 import { updateAnnounce  } from '../controllers/announcement/update';
 import { postAnnounce } from '../controllers/announcement/post'
@@ -43,6 +43,7 @@ const fileStorageEngine = multer.diskStorage({
   });
 
 root.get('/getAnnounce',  AuthMiddleware, getAnnounce );
+root.get('/getAnnounce',  AuthMiddleware, getAnnounceMain );
 root.get('/getAnnouncePopular',  AuthMiddleware, getAnnouncePopular );
 root.get('/getAnnounceSingle',  AuthMiddleware, getAnnounceSingle);
 root.delete('/deleteAnnounce', AuthMiddleware , AdminMiddlewere, deleteAnnounce)

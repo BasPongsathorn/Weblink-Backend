@@ -17,7 +17,7 @@ const postAnnounce = async(req: any, res: Response) => {
   const schema = Joi.object({
     Title: Joi.string().min(1).max(255).required(),
     Image: Joi.string(),
-    Description: Joi.string().min(1).max(255).required(),
+    Description: Joi.string().min(1).required(),
     CategoryID: Joi.string().min(1).max(255).required(),
   });
 
