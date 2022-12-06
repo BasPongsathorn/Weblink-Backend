@@ -108,23 +108,25 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
         });
     }
 
+  
+   
     const findFaq = await prisma.announcement.findMany({
         take: reslimit, 
         orderBy: {
             Viewer: 'desc',
         },
         where: {
-            AND: [
+            AND:  [
                 {
                     CreateAt: {
-                        gte: new Date(dayjs().startOf(PopularType).format('YYYY-MM-DD')),
+                        gte: new Date(dayjs().startOf(PopularType).format('YYYY-MM-DD HH:mm:ss')),
                     },
                 },
                 {
                     CreateAt: {
-                        lte: new Date(dayjs().endOf(PopularType).format('YYYY-MM-DD')),
+                        lte: new Date(dayjs().endOf(PopularType).format('YYYY-MM-DD HH:mm:ss')),
                     },
-                },
+                }
             ],
             Public: true
          
@@ -136,22 +138,29 @@ const getAnnouncePopular : RequestHandler = async (req: Request, res: Response) 
 const getAnnounceSingle = async (req: Request, res: Response) => {
     const AnnouncementID = req.body.AnnouncementID;
 
-    const singleAnnounce = await prisma.announcement.findFirst({
+    const findSingleAnnounce = await prisma.announcement.findFirst({
         where: {
             AnnouncementID: AnnouncementID,
         },
     });
 
-    if (singleAnnounce !== null && singleAnnounce !== undefined) {
+
+    if (findSingleAnnounce !== null && findSingleAnnounce !== undefined) {
+        const FilePath = process.env.FilePath;
+        const singleAnnounce: any = {
+            ...findSingleAnnounce,
+            ImageFullpath: findSingleAnnounce.Image ? `${FilePath}/image-announcement/${findSingleAnnounce.Image}` : null,
+        };
+
         const findAnotherAnnounce = await prisma.announcement.findMany({
             where: {
                 AND: [
                     {
-                        CategoryID: singleAnnounce.CategoryID,
+                        CategoryID: findSingleAnnounce.CategoryID,
                     },
                     {
                         AnnouncementID: {
-                            not: singleAnnounce.AnnouncementID,
+                            not: findSingleAnnounce.AnnouncementID,
                         },
                     },
                 ],
@@ -161,7 +170,21 @@ const getAnnounceSingle = async (req: Request, res: Response) => {
                 Viewer: 'asc',
             },
         });
-        const result = { singleAnnounce, findAnotherAnnounce };
+
+        
+
+        const anotherAnnounce: any = [];
+        if (findAnotherAnnounce && findAnotherAnnounce.length > 0) {
+            findAnotherAnnounce.map((item: any) => {
+
+                const itemObject: any = {
+                    ...item,
+                    ImageFullpath: item.Image ? `${FilePath}/image-announcement/${item.Image}` : null,
+                };
+                anotherAnnounce.push(itemObject);
+            });
+        }
+        const result = { singleAnnounce, anotherAnnounce };
         return res.json(result);
     } else
         return res.status(422).json({

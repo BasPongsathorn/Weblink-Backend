@@ -95,8 +95,8 @@ const updateAnnounce = async (req: any, res: Response) => {
       data: error.details,
     });
   }
-
-  if(update != null && oldImage){
+  let checkimgdel = req.file?.filename
+  if(update != null && oldImage && checkimgdel != null && checkimgdel != "" && checkimgdel != undefined ){
     unlink(`././src/image/image-Announcement/${oldAnnouncement.Image}`, () => {});
   }
 
