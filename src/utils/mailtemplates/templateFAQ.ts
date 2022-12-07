@@ -8,11 +8,11 @@ const templateFAQ = (Message: string) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        <p>${Message}</p>
+     
     </style>
 </head>
 <body>
-   
+    <p>${Message}</p>
 </body>
 </html>
     `;

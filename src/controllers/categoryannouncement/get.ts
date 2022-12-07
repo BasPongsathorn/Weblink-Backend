@@ -20,6 +20,7 @@ const getCaategoryAnnounce = async( req:Request , res:Response) => {
         orderBy:{
             CategoryName:"asc"
         }
+        
     })
 
     const pagina = findWebCat.slice(startIndex , endIndex)

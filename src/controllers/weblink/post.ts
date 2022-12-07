@@ -10,10 +10,7 @@ const postWeblink: RequestHandler = async (req: any, res) => {
 
     const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
     const payload: any = [];
-    let status = false;
-    if (body.Public === '1') {
-        status = true;
-    }
+
     if (wbs && wbs.length > 0) {
         for (let i = 0; i < wbs.length; i++) {
             const wb = body.wb[i];
@@ -28,6 +25,10 @@ const postWeblink: RequestHandler = async (req: any, res) => {
                     },
                 });
                 if (checkWebCateID !== null && checkWebCateID !== undefined) {
+                    let status = false;
+                    if (wb.Public === '1') {
+                        status = true;
+                    }
                     if (image !== null && image !== undefined) {
                         const extension = path.extname(image.originalname).toLowerCase();
                         const tempPath = image.path;
@@ -45,7 +46,7 @@ const postWeblink: RequestHandler = async (req: any, res) => {
                                 WeblinkCategoryID: wb.WeblinkCategoryID,
                                 Image: fileName,
                                 CreatedBy: req.user.Email,
-                                Public:status
+                                Public: status,
                             });
                         } else {
                             fs.unlink(tempPath, (err) => {
@@ -61,7 +62,7 @@ const postWeblink: RequestHandler = async (req: any, res) => {
                             WeblinkCategoryID: wb.WeblinkCategoryID,
                             Image: fileName,
                             CreatedBy: req.user.Email,
-                            Public:status
+                            Public: status,
                         });
                     }
                 } else

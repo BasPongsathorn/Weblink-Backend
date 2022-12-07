@@ -74,13 +74,13 @@ const postLoginEmail =  async (req: Request, res: Response) => {
                     OtpExpired: OtpExpired,
                 },
             });
-            //  if (updateUser) {
-            //      await SendMailOTP(otp, ReqEmail);
-            //      return res.json({
-            //          message: 'OK',
-            //     });
-                  console.log(otp)
-            //  }
+             if (updateUser) {
+                 await SendMailOTP(otp, ReqEmail);
+                 return res.json({
+                     message: 'OK',
+                });
+                //   console.log(otp)
+              }
             return res.status(500).json({
                 message: 'Failed',
             });
